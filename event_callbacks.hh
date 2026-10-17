@@ -1,20 +1,18 @@
-#pragma once
 #include <iostream>
 #include <stdio.h>
 #include <list>
 
-typedef void (*CallbackFunction)(void *ctx, Event *evt);
+typedef void (*callback_function)(void);
+
 
 class EventListener
 {
     public:
         void* contextObject;
-        CallbackFunction callbackFunction;
+        callback_function callbackFunction;
 
     public:
-    EventListener()  : contextObject(nullptr), callbackFunction(NULL){};
-
-    EventListener(void* context, CallbackFunction callback)
+    EventListener(void* context, callback_function callback)
     : contextObject(context), callbackFunction(callback){};
 };
 
@@ -25,7 +23,7 @@ class EventDispatcher
 
 
     public:
-        void subscribe(void* context, CallbackFunction callback)
+        void subscribe(void* context, callback_function callback)
         {
             EventListener listener(context, callback);
             listeners.push_back(listener);
@@ -37,11 +35,11 @@ class EventDispatcher
                 return &listeners.at(index);;
         }
 
-        void dispatchEvent(Event* event)
+        void dispatchEvent()
         {
             for(auto& listener : listeners)
             {
-                listener.callbackFunction(listener.contextObject, event);
+                listener.callbackFunction();
             }
         }
 
