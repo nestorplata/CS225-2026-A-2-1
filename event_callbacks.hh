@@ -33,7 +33,7 @@ class EventDispatcher
 
         EventListener* getListenerAt(int index)
         {
-            if(index < 0 || index >= listeners.size()) return nullptr;
+            if(index < 0 || index >= (int)listeners.size()) return nullptr;
                 return &listeners.at(index);;
         }
 

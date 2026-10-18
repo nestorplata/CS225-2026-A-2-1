@@ -331,7 +331,10 @@ namespace Tests {
             printf("TEST10 Generic event handler\n");
             
             DummyObject dummyObject;
-            EventHandler<DummyObject, DummyEvent> eventHandler(dummyObject, &DummyObject::on_some_event);
+
+
+
+            EventHandler<DummyObject, DummyEvent> eventHandler(&dummyObject, &DummyObject::on_some_event);
 
 
             printf("TEST10 Succeed!\n");
@@ -351,6 +354,7 @@ namespace Tests {
             DummyObject dummyObject;
             DummyEvent event;
             
+            EventHandler<DummyObject, DummyEvent> eventHandler(&dummyObject, &DummyObject::on_some_event);
             eventHandler.call(&event);
 
             ASSERT_THAT ( dummyObject.eventCalled );
@@ -371,7 +375,7 @@ namespace Tests {
             DummyObject dummyObject;
             OtherEvent notSupportEvent;
             
-            EventHandler<DummyObject, DummyEvent> eventHandler(dummyObject, &DummyObject::on_some_event);
+            EventHandler<DummyObject, DummyEvent> eventHandler(&dummyObject, &DummyObject::on_some_event);
             eventHandler.call(&notSupportEvent);
 
             ASSERT_THAT(!dummyObject.eventCalled)
@@ -392,7 +396,7 @@ namespace Tests {
             DummyObject dummyObject;
             DummyEvent dummyEvent;
             
-            EventHandler<DummyObject, DummyEvent> eventHandler(dummyObject, &DummyObject::on_some_event);
+            EventHandler<DummyObject, DummyEvent> eventHandler(&dummyObject, &DummyObject::on_some_event);
             eventHandler.call(&dummyEvent);
 
             EventManager eventManager;
@@ -414,8 +418,8 @@ namespace Tests {
             DummyObject dummyObject;
             DummyEvent dummyEvent;
             
-            EventHandler<DummyObject, DummyEvent> eventHandler1(dummyObject, &DummyObject::on_some_event);
-            EventHandler<DummyObject, OtherEvent> eventHandler2(dummyObject, &DummyObject::on_other_event);
+            EventHandler<DummyObject, DummyEvent> eventHandler1(&dummyObject, &DummyObject::on_some_event);
+            EventHandler<DummyObject, OtherEvent> eventHandler2(&dummyObject, &DummyObject::on_other_event);
 
             EventManager eventManager;
             eventManager.registerEventHandler(&eventHandler1);
@@ -448,8 +452,8 @@ namespace Tests {
                 EventHandler<Timer, AnotherEvent> otherEventHandler;
 
                 Timer(int n, int s) : number(n), seconds(s), 
-                timerEventHandler(*this, &Timer::on_timer_event), 
-                otherEventHandler(*this, &Timer::on_other_event) {}
+                timerEventHandler(this, &Timer::on_timer_event), 
+                otherEventHandler(this, &Timer::on_other_event) {}
 
                 void on_timer_event(TimerEvent *event){
                     seconds++;
@@ -498,4 +502,3 @@ namespace Tests {
         #endif         
     }     
 } // namespace Tests::EventHandlers
-

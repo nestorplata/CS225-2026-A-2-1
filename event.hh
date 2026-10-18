@@ -4,12 +4,12 @@
 
 class Event {
 public:
-    Event();
+    Event() {};
     virtual ~Event() {}; 
 
     void trigger();
     
 private:
-     virtual void handleEvent();
+     //virtual void handleEvent();
 };
 
