@@ -2,12 +2,12 @@
 #pragma once
 #include<iostream>
 #include<stdio.h>
-#include<algorithm>
+#include<vector>
 class Event;
 
 class IEventHandler
 {
-    protected:
+    public:
     virtual void call(Event* event)=0;
     
 };
@@ -22,30 +22,26 @@ class EventHandler: public IEventHandler
     EventCallback ActionMethod;
 
     public:
-    EventHandler(T *object, EventCallback func)
-    {
-        Object_T = object;
-        ActionMethod = func;
-
-    }
+    EventHandler(T *object, EventCallback func) : Object_T(object), ActionMethod(func){ }
 
     void call( Event* event)override 
     {
         if(dynamic_cast<E*>(event)) (Object_T->*ActionMethod)(static_cast<E*>(event));
     } 
+   
 };
 
 class EventManager
 {
-    using Event_Handlers_Sub = EventHandler<EventListener, Event>;
     private:
-    std::vector<Event_Handlers_Sub> listeners_subscribed;
+    std::vector<IEventHandler*> listeners_subscribed;
+
+    
 
     public:
-    void registerEventHandler(Event_Handlers_Sub* listener);
+    void registerEventHandler(IEventHandler* listener);
     
-    Event_Handlers_Sub* getEventHandlerAt( int i);
-
-    void notifyEvent();
-
+    IEventHandler* getEventHandlerAt( int i);
+    
+    void notifyEvent(Event* event);
 };

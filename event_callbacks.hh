@@ -2,9 +2,12 @@
 #include <iostream>
 #include <stdio.h>
 #include <list>
+#include <vector>
+class Event;
 
 typedef void (*CallbackFunction)(void *ctx, Event *evt);
 
+class Event;
 class EventListener
 {
     public:
@@ -25,25 +28,12 @@ class EventDispatcher
 
 
     public:
-        void subscribe(void* context, CallbackFunction callback)
-        {
-            EventListener listener(context, callback);
-            listeners.push_back(listener);
-        }
+        void subscribe(void* context, CallbackFunction callback);
 
-        EventListener* getListenerAt(int index)
-        {
-            if(index < 0 || index >= (int)listeners.size()) return nullptr;
-                return &listeners.at(index);;
-        }
+        EventListener* getListenerAt(int index);
 
-        void dispatchEvent(Event* event)
-        {
-            for(auto& listener : listeners)
-            {
-                listener.callbackFunction(listener.contextObject, event);
-            }
-        }
+        void dispatchEvent(Event* event);
+        
 
 
 
